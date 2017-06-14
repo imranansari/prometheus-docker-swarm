@@ -6,6 +6,7 @@ custom commands to `docker run`!
 ## Dockerfile Environment
 
 - `ALERTMANAGER_ENDPOINT`: Endpoint of alertmanager
+- `MAX_MEMORY_USAGE_PER_CONTAINER`: Max memory usage per container 
 
 ## Usage
 

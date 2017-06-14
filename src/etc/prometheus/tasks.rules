@@ -8,7 +8,7 @@ ALERT high_cpu_usage_on_container
   }
 
 ALERT container_eating_memory
-  IF sum(container_memory_rss{container_label_com_docker_swarm_task_name=~".+"}) by (instance,name) > 1500000000
+  IF sum(container_memory_rss{container_label_com_docker_swarm_task_name=~".+"}) by (instance,name) > {{ MAX_MEMORY_USAGE_PER_CONTAINER }}
   FOR 5m
   ANNOTATIONS {
       summary = "HIGH MEMORY USAGE WARNING: TASK '{{ $labels.container_label_com_docker_swarm_task_name }}' on '{{ $labels.instance }}'",

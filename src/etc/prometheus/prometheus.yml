@@ -8,9 +8,9 @@ global:
     monitor: 'prometheus-swarm'
 
 rule_files:
-  - "alert.rules_nodes"
-  - "alert.rules_tasks"
-  - "alert.rules_service-groups"
+  - "nodes.rules"
+  - "service-groups.rules"
+  - "tasks.rules"
 
 scrape_configs:
   - job_name: 'prometheus'

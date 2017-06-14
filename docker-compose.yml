@@ -74,8 +74,7 @@ services:
           memory: 16M
 
   prometheus:
-    # image: thomasjpfan/prometheus-docker-swarm:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
-    image: g:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
+    image: thomasjpfan/prometheus-docker-swarm:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
     ports:
       - 9090:9090
     networks:
