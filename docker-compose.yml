@@ -29,7 +29,7 @@ services:
           memory: 64M
 
   node-exporter:
-    image: thomasjpfan/docker-node-exporter:${NODE_EXPORTER_VERSION:-v0.1.2-node-exporter-v0.14.0}
+    image: thomasjpfan/node-exporter:${NODE_EXPORTER_VERSION:-v0.1.2-node-exporter-v0.14.0}
     networks:
       - monitoring
     ports:
@@ -52,7 +52,7 @@ services:
           memory: 16M
 
   alertmanager:
-    image: thomasjpfan/docker-alertmanager:${ALERTMANAGER_VERSION:-v0.1.0-alertmanager-v0.7.1}
+    image: thomasjpfan/alertmanager:${ALERTMANAGER_VERSION:-v0.1.0-alertmanager-v0.7.1}
     networks:
       - monitoring
     ports:
@@ -74,7 +74,7 @@ services:
           memory: 16M
 
   prometheus:
-    image: thomasjpfan/prometheus-docker-swarm:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
+    image: thomasjpfan/prometheus-swarm:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
     ports:
       - 9090:9090
     networks:
@@ -95,7 +95,7 @@ services:
           memory: 128M
 
   grafana:
-    image: thomasjpfan/docker-grafana:${GRAFANA_VERSION:-v0.1.1-grafana-v4.3.2}
+    image: thomasjpfan/grafana:${GRAFANA_VERSION:-v0.1.1-grafana-v4.3.2}
     ports:
       - 3000:3000
     networks:
