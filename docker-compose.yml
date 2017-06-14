@@ -1,0 +1,118 @@
+version: "3.2"
+
+networks:
+  monitoring:
+    external: true
+
+services:
+  cadvisor:
+    image: google/cadvisor:${CADVISOR_VERSION:-v0.25.0}
+    networks:
+      - monitoring
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    deploy:
+      mode: global
+      labels:
+        com.docker.stack.namespace: "monitoring"
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
+  node-exporter:
+    image: thomasjpfan/docker-node-exporter:${NODE_EXPORTER_VERSION:-v0.1.2-node-exporter-v0.14.0}
+    networks:
+      - monitoring
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /etc/hostname:/etc/host_hostname
+    deploy:
+      mode: global
+      labels:
+        com.docker.stack.namespace: "monitoring"
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 32M
+        reservations:
+          cpus: '0.10'
+          memory: 16M
+
+  alertmanager:
+    image: thomasjpfan/docker-alertmanager:${ALERTMANAGER_VERSION:-v0.1.0-alertmanager-v0.7.1}
+    networks:
+      - monitoring
+    ports:
+      - 9093:9093
+    environment:
+      PUSHOVER_USER_KEY: pushover_key
+      PUSHOVER_APP_API_TOKEN: pushover_app_api
+    deploy:
+      mode: replicated
+      labels:
+        com.docker.stack.namespace: "monitoring"
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 32M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
+  prometheus:
+    # image: thomasjpfan/prometheus-docker-swarm:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
+    image: g:${PROMETHEUS_VERSION:-v0.1.0-prometheus-v1.7.1}
+    ports:
+      - 9090:9090
+    networks:
+      - monitoring
+    environment:
+      ALERTMANAGER_ENDPOINT: http://alertmanager:9093
+    deploy:
+      mode: replicated
+      labels:
+        com.docker.stack.namespace: "monitoring"
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 960M
+        reservations:
+          cpus: '0.50'
+          memory: 128M
+
+  grafana:
+    image: thomasjpfan/docker-grafana:${GRAFANA_VERSION:-v0.1.1-grafana-v4.3.2}
+    ports:
+      - 3000:3000
+    networks:
+      - monitoring
+    environment:
+      PROMETHEUS_ENDPOINT: http://prometheus:9090
+    deploy:
+      mode: replicated
+      labels:
+        com.docker.stack.namespace: "monitoring"
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 64M
+        reservations:
+          cpus: '0.50'
+          memory: 32M
+
